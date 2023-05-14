@@ -96,3 +96,7 @@ if __name__ == "__main__":
                 pass
 
         rolls += 1
+
+    print("Endstand:")
+    show(field)
+    print("PUNKTE:", evaluate(field))
