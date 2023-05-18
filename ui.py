@@ -5,6 +5,7 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.label import Label
 from kivy.uix.modalview import ModalView
 from kivy.properties import NumericProperty
+from dialog import AbortGameDialogContent, GameOverDialogContent
 
 from model import Knister
 
@@ -33,6 +34,7 @@ class KnisterGrid(GridLayout):
             self.knister.field[row][col] = self.current_number or 0
             self.current_number = self.knister.roll()
             self.sync()
+            self.check_finished()
 
     def new_game(self):
         self.knister = Knister()
@@ -45,6 +47,13 @@ class KnisterGrid(GridLayout):
                 self.buttons[row][col].text = str(
                     self.knister.field[row][col] or "")
         self.notify_parent()
+
+    def check_finished(self):
+        if self.knister.is_finished():
+            view = ModalView(size_hint=(None, None), size=(400, 400))
+            view.add_widget(GameOverDialogContent(
+                score=self.knister.evaluate(), dismiss=view.dismiss))
+            view.open()
 
 
 class TopBar(BoxLayout):
@@ -67,29 +76,6 @@ class TopBar(BoxLayout):
         self.next_widget.text = f"Next: {self.nextNum}"
 
 
-class AbortGameDialogContent(GridLayout):
-    def __init__(self, on_confirm, dismiss, **kwargs):
-        super().__init__(cols=1, rows=3, **kwargs)
-
-        self.on_confirm = on_confirm
-        self.dismiss = dismiss
-
-        self.add_widget(
-            Label(text='Abort current game?', size_hint=(1.0, 2.0)))
-
-        abort_button = Button(text="Yes, start new game")
-        abort_button.bind(on_press=self.confirm)
-        self.add_widget(abort_button)
-
-        continue_button = Button(text="No, continue")
-        continue_button.bind(on_press=self.dismiss)
-        self.add_widget(continue_button)
-
-    def confirm(self, instance):
-        self.dismiss()
-        self.on_confirm()
-
-
 class KnisterApp(App):
     def build(self):
         layout = BoxLayout(orientation="vertical")
@@ -109,7 +95,7 @@ class KnisterApp(App):
         return layout
 
     def start_game(self, instance):
-        if self.knister_grid.knister.evaluate() > 0:
+        if self.knister_grid.knister.evaluate() > 0 and not self.knister_grid.knister.is_finished():
             view = ModalView(size_hint=(None, None), size=(400, 400))
             view.add_widget(AbortGameDialogContent(
                 on_confirm=self.knister_grid.new_game, dismiss=view.dismiss))

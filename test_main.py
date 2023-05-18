@@ -1,4 +1,4 @@
-from .main import Knister
+from .model import Knister
 
 
 def test_eval_group_no_score():
@@ -39,3 +39,21 @@ def test_eval_group_street_with_7_lower():
 
 def test_eval_group_fiver():
     assert Knister.eval_group([2, 2, 2, 2, 2]) == 10
+
+
+def test_finished_empty():
+    k = Knister()
+    k.field = [[0, 0, 0, 0, 0]] * 5
+    assert not k.is_finished()
+
+
+def test_finished_filled():
+    k = Knister()
+    k.field = [[2, 3, 4, 5, 6]] * 5
+    assert k.is_finished()
+
+
+def test_finished_one_zero():
+    k = Knister()
+    k.field = [[2, 3, 4, 5, 6]] * 4 + [[2, 3, 4, 5, 0]]
+    assert not k.is_finished()
