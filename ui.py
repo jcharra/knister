@@ -5,7 +5,7 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.label import Label
 from kivy.uix.modalview import ModalView
 from kivy.properties import NumericProperty
-from dialog import AbortGameDialogContent, GameOverDialogContent
+from dialog import DIALOG_DIMENSIONS, GAME_FONT_SIZE, AbortGameDialogContent, GameOverDialogContent
 
 from model import Knister
 
@@ -22,7 +22,7 @@ class KnisterGrid(GridLayout):
         for row in range(5):
             row_buttons = []
             for col in range(5):
-                b = Button(text="", font_size='40sp')
+                b = Button(text="", font_size=GAME_FONT_SIZE)
                 b.bind(on_press=lambda btn, r=row,
                        c=col: self.set_num(r, c))
                 self.add_widget(b)
@@ -50,7 +50,7 @@ class KnisterGrid(GridLayout):
 
     def check_finished(self):
         if self.knister.is_finished():
-            view = ModalView(size_hint=(None, None), size=(400, 400))
+            view = ModalView(size_hint=(None, None), size=DIALOG_DIMENSIONS)
             view.add_widget(GameOverDialogContent(
                 score=self.knister.evaluate(), dismiss=view.dismiss))
             view.open()
@@ -63,10 +63,12 @@ class TopBar(BoxLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        self.next_widget = Label(text=f"", font_size='40sp')
+        self.next_widget = Label(
+            text=f"", font_size=GAME_FONT_SIZE, color=(0, 1, 0), bold=True)
         self.add_widget(self.next_widget)
 
-        self.score_widget = Label(text="Score: 0", font_size='40sp')
+        self.score_widget = Label(
+            text="Score: 0", font_size=GAME_FONT_SIZE, color=(0.5, 0.5, 1), bold=True)
         self.add_widget(self.score_widget)
 
     def on_score(self, instance, value):
@@ -88,7 +90,8 @@ class KnisterApp(App):
         layout.add_widget(self.knister_grid)
 
         start_button = Button(
-            text="New game", font_size='40sp', size_hint=(1.0, 1.0))
+            text="New game", font_size=GAME_FONT_SIZE, size_hint=(1.0, 1.0),
+            color=(1, 1, 0), bold=True, background_color=(1, 0, 0, 0.8))
         start_button.bind(on_press=self.start_game)
         layout.add_widget(start_button)
 
@@ -96,7 +99,7 @@ class KnisterApp(App):
 
     def start_game(self, instance):
         if self.knister_grid.knister.evaluate() > 0 and not self.knister_grid.knister.is_finished():
-            view = ModalView(size_hint=(None, None), size=(400, 400))
+            view = ModalView(size_hint=(None, None), size=DIALOG_DIMENSIONS)
             view.add_widget(AbortGameDialogContent(
                 on_confirm=self.knister_grid.new_game, dismiss=view.dismiss))
             view.open()
