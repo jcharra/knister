@@ -1,9 +1,9 @@
-import random
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.label import Label
+from kivy.properties import NumericProperty
 
 from main import Knister
 
@@ -34,12 +34,32 @@ class KnisterGrid(GridLayout):
         self.on_change()
 
 
+class TopBar(BoxLayout):
+    score = NumericProperty(0)
+    nextNum = NumericProperty(0)
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+        self.next_widget = Label(text=f"", font_size='40sp')
+        self.add_widget(self.next_widget)
+
+        self.score_widget = Label(text="Score: 0", font_size='40sp')
+        self.add_widget(self.score_widget)
+
+    def on_score(self, instance, value):
+        self.score_widget.text = f"Score: {self.score}"
+
+    def on_nextNum(self, instance, value):
+        self.next_widget.text = f"Next: {self.nextNum}"
+
+
 class KnisterApp(App):
     def build(self):
         layout = BoxLayout(orientation="vertical")
 
-        self.next_num = Label(text="0", font_size='40sp', size_hint=(1.0, 1.0))
-        layout.add_widget(self.next_num)
+        self.top_bar = TopBar()
+        layout.add_widget(self.top_bar)
 
         self.knister_grid = KnisterGrid(
             size_hint=(1.0, 5.0), on_change=self.update)
@@ -56,7 +76,8 @@ class KnisterApp(App):
         self.knister_grid.start()
 
     def update(self):
-        self.next_num.text = str(self.knister_grid.current_number)
+        self.top_bar.nextNum = self.knister_grid.current_number
+        self.top_bar.score = self.knister_grid.knister.evaluate()
 
 
 if __name__ == '__main__':
