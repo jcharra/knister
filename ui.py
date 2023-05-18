@@ -3,35 +3,48 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.label import Label
+from kivy.uix.modalview import ModalView
 from kivy.properties import NumericProperty
 
-from main import Knister
+from model import Knister
 
 
 class KnisterGrid(GridLayout):
-    def __init__(self, on_change, **kwargs):
+    def __init__(self, notify_parent, **kwargs):
         super().__init__(cols=5, rows=5, **kwargs)
 
-        self.on_change = on_change
-        self.current_number = None
+        self.notify_parent = notify_parent
+        self.buttons = []
         self.knister = Knister()
+        self.current_number = None
 
-        for idx in range(25):
-            b = Button(text="", font_size='40sp')
-            b.bind(on_press=lambda btn, i=idx: self.set_num(btn, i))
-            self.add_widget(b)
+        for row in range(5):
+            row_buttons = []
+            for col in range(5):
+                b = Button(text="", font_size='40sp')
+                b.bind(on_press=lambda btn, r=row,
+                       c=col: self.set_num(r, c))
+                self.add_widget(b)
+                row_buttons.append(b)
+            self.buttons.append(row_buttons)
 
-    def set_num(self, button, idx):
-        if self.current_number and button.text == "" and self.knister.field[idx // 5][idx % 5] == 0:
-            button.text = str(self.current_number)
-            self.knister.field[idx // 5][idx % 5] = self.current_number or 0
-            self.knister.show()
+    def set_num(self, row, col):
+        if self.current_number and self.knister.field[row][col] == 0:
+            self.knister.field[row][col] = self.current_number or 0
             self.current_number = self.knister.roll()
-            self.on_change()
+            self.sync()
 
-    def start(self):
+    def new_game(self):
+        self.knister = Knister()
         self.current_number = self.knister.roll()
-        self.on_change()
+        self.sync()
+
+    def sync(self):
+        for row in range(5):
+            for col in range(5):
+                self.buttons[row][col].text = str(
+                    self.knister.field[row][col] or "")
+        self.notify_parent()
 
 
 class TopBar(BoxLayout):
@@ -54,6 +67,29 @@ class TopBar(BoxLayout):
         self.next_widget.text = f"Next: {self.nextNum}"
 
 
+class AbortGameDialogContent(GridLayout):
+    def __init__(self, on_confirm, dismiss, **kwargs):
+        super().__init__(cols=1, rows=3, **kwargs)
+
+        self.on_confirm = on_confirm
+        self.dismiss = dismiss
+
+        self.add_widget(
+            Label(text='Abort current game?', size_hint=(1.0, 2.0)))
+
+        abort_button = Button(text="Yes, start new game")
+        abort_button.bind(on_press=self.confirm)
+        self.add_widget(abort_button)
+
+        continue_button = Button(text="No, continue")
+        continue_button.bind(on_press=self.dismiss)
+        self.add_widget(continue_button)
+
+    def confirm(self, instance):
+        self.dismiss()
+        self.on_confirm()
+
+
 class KnisterApp(App):
     def build(self):
         layout = BoxLayout(orientation="vertical")
@@ -62,18 +98,24 @@ class KnisterApp(App):
         layout.add_widget(self.top_bar)
 
         self.knister_grid = KnisterGrid(
-            size_hint=(1.0, 5.0), on_change=self.update)
+            size_hint=(1.0, 5.0), notify_parent=self.update)
         layout.add_widget(self.knister_grid)
 
         start_button = Button(
-            text="Start", font_size='40sp', size_hint=(1.0, 1.0))
+            text="New game", font_size='40sp', size_hint=(1.0, 1.0))
         start_button.bind(on_press=self.start_game)
         layout.add_widget(start_button)
 
         return layout
 
     def start_game(self, instance):
-        self.knister_grid.start()
+        if self.knister_grid.knister.evaluate() > 0:
+            view = ModalView(size_hint=(None, None), size=(400, 400))
+            view.add_widget(AbortGameDialogContent(
+                on_confirm=self.knister_grid.new_game, dismiss=view.dismiss))
+            view.open()
+        else:
+            self.knister_grid.new_game()
 
     def update(self):
         self.top_bar.nextNum = self.knister_grid.current_number
