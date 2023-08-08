@@ -41,7 +41,7 @@ class Knister:
             nums = sorted(values)
             if nums == list(range(nums[0], nums[0] + 5)):
                 if 7 in nums:
-                    return 10
+                    return 8
                 else:
                     return 12
             else:

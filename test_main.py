@@ -26,7 +26,7 @@ def test_eval_group_full_house():
 
 
 def test_eval_group_street_with_7():
-    assert Knister.eval_group([7, 5, 6, 4, 3]) == 10
+    assert Knister.eval_group([7, 5, 6, 4, 3]) == 8
 
 
 def test_eval_group_street_without_7_higher():

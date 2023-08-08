@@ -5,6 +5,5 @@
   "[python]": {
     "editor.defaultFormatter": "ms-python.autopep8"
   },
-  "python.formatting.provider": "none",
   "python.defaultInterpreterPath": "/Users/johannescharra/Code/Python/knister/.venv/bin/python3"
 }
