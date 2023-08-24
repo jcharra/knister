@@ -4,6 +4,7 @@ from kivy.uix.button import Button
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.label import Label
 from kivy.uix.modalview import ModalView
+from kivy.animation import Animation
 from kivy.properties import NumericProperty
 from dialog import DIALOG_DIMENSIONS, GAME_FONT_SIZE, AbortGameDialogContent, GameOverDialogContent
 
@@ -75,7 +76,14 @@ class TopBar(BoxLayout):
         self.score_widget.text = f"Score: {self.score}"
 
     def on_nextNum(self, instance, value):
-        self.next_widget.text = f"Next: {self.nextNum}"
+        animation = Animation(font_size=5, duration=0.2)
+        animation.bind(on_complete=self.reset_size)
+        animation.start(self.next_widget)
+
+    def reset_size(self, instance, value):
+        self.next_widget.text = f"{self.nextNum}"
+        animation = Animation(font_size=90, duration=0.2)
+        animation.start(self.next_widget)
 
 
 class KnisterApp(App):
@@ -107,6 +115,7 @@ class KnisterApp(App):
             self.knister_grid.new_game()
 
     def update(self):
+        self.top_bar.nextNum = 0
         self.top_bar.nextNum = self.knister_grid.current_number
         self.top_bar.score = self.knister_grid.knister.evaluate()
 

@@ -2,7 +2,7 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.button import Button
 from kivy.uix.label import Label
 
-GAME_FONT_SIZE = '40sp'
+GAME_FONT_SIZE = '60'
 DIALOG_FONT_SIZE = '26sp'
 DIALOG_DIMENSIONS = 600, 400
 
