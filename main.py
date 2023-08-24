@@ -97,11 +97,11 @@ class KnisterApp(App):
             size_hint=(1.0, 5.0), notify_parent=self.update)
         layout.add_widget(self.knister_grid)
 
-        start_button = Button(
+        self.start_button = Button(
             text="New game", font_size=GAME_FONT_SIZE, size_hint=(1.0, 1.0),
             color=(1, 1, 0), bold=True, background_color=(1, 0, 0, 0.8))
-        start_button.bind(on_press=self.start_game)
-        layout.add_widget(start_button)
+        self.start_button.bind(on_press=self.start_game)
+        layout.add_widget(self.start_button)
 
         return layout
 
