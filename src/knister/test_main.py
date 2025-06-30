@@ -1,4 +1,4 @@
-from .model import Knister
+from model import Knister
 
 
 def test_eval_group_no_score():

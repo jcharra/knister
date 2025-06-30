@@ -6,9 +6,9 @@ from kivy.uix.label import Label
 from kivy.uix.modalview import ModalView
 from kivy.animation import Animation
 from kivy.properties import NumericProperty
-from dialog import DIALOG_DIMENSIONS, GAME_FONT_SIZE, AbortGameDialogContent, GameOverDialogContent
+from knister.dialog import DIALOG_DIMENSIONS, GAME_FONT_SIZE, AbortGameDialogContent, GameOverDialogContent
 
-from model import Knister
+from knister.model import Knister
 
 
 class KnisterGrid(GridLayout):

@@ -1,0 +1,11 @@
+Metadata-Version: 2.1
+Briefcase-Version: 0.3.23
+Name: knister
+Formal-Name: Knister
+App-ID: com.github.knister
+Version: 0.0.1
+Home-page: https://github.com/jcharra/knister
+Download-URL: https://github.com/jcharra/knister
+Author: Johannes Charra
+Author-email: johannes.charra@gmail.com
+Summary: A dice game

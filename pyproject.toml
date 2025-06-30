@@ -1,0 +1,126 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "knister"
+version = "0.1.0"
+description = "A dice game"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "MIT"}
+authors = [
+  {name = "Johannes Charra", email = "johannes.charra@gmail.com"}
+]
+dependencies = [
+  "kivy"
+]
+
+[project.urls]
+Homepage = "https://github.com/jcharra/knister"
+
+
+# content below this line added by briefcase convert
+# This project was generated with 0.3.23 using template: https://github.com/beeware/briefcase-template @ v0.3.23
+[tool.briefcase]
+project_name = "Knister"
+bundle = "com.github"
+version = "0.0.1"
+url = "https://github.com/jcharra/knister"
+license.file = "LICENSE"
+author = "Johannes Charra"
+author_email = "johannes.charra@gmail.com"
+
+[tool.briefcase.app.knister]
+formal_name = "Knister"
+description = "A dice game"
+long_description = """More details about the app should go here.
+"""
+sources = [
+    "src/knister",
+]
+test_sources = [
+    "tests",
+]
+
+requires = [
+    # Add your cross-platform app requirements here
+]
+test_requires = [
+    # Add your cross-platform test requirements here
+]
+
+[tool.briefcase.app.knister.macOS]
+universal_build = true
+requires = [
+    # Add your macOS-specific app requirements here
+]
+
+[tool.briefcase.app.knister.linux]
+requires = [
+    # Add your Linux-specific app requirements here
+]
+
+[tool.briefcase.app.knister.linux.system.debian]
+system_requires = [
+    # Add any system packages needed at build the app here
+]
+
+system_runtime_requires = [
+    # Add any system packages needed at runtime here
+]
+
+[tool.briefcase.app.knister.linux.system.rhel]
+system_requires = [
+    # Add any system packages needed at build the app here
+]
+
+system_runtime_requires = [
+    # Add any system packages needed at runtime here
+]
+
+[tool.briefcase.app.knister.linux.system.suse]
+system_requires = [
+    # Add any system packages needed at build the app here
+]
+
+system_runtime_requires = [
+    # Add any system packages needed at runtime here
+]
+
+[tool.briefcase.app.knister.linux.system.arch]
+system_requires = [
+    # Add any system packages needed at build the app here
+]
+
+system_runtime_requires = [
+    # Add any system packages needed at runtime here
+]
+
+[tool.briefcase.app.knister.linux.flatpak]
+flatpak_runtime = "org.freedesktop.Platform"
+flatpak_runtime_version = "24.08"
+flatpak_sdk = "org.freedesktop.Sdk"
+
+[tool.briefcase.app.knister.windows]
+requires = [
+    # Add your Windows-specific app requirements here
+]
+
+# Mobile deployments
+[tool.briefcase.app.knister.iOS]
+requires = [
+    # Add your iOS-specific app requirements here
+]
+
+[tool.briefcase.app.knister.android]
+requires = [
+    # Add your Android-specific app requirements here
+]
+
+# Web deployments
+[tool.briefcase.app.knister.web]
+requires = [
+    # Add your web-specific app requirements here
+]
+
